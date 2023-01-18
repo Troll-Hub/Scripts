@@ -1,0 +1,41 @@
+if game.PlaceId == 11196588443 then
+
+        --Load
+        local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+
+        ---Main
+        local Window = OrionLib:MakeWindow({Name = "Troll-Hub", HidePremium = false, SaveConfig = true, ConfigFolder = "Hubcfg", IntroEnabled = false})
+        --Valor
+        _G.Wool = true 
+        
+        ---funcao
+function Wool()
+        while _G.Wool == true do
+        game:GetService("ReplicatedStorage").Signals.RemoteEvents.GetWoolRemote:FireServer(16, nil)
+        wait(1)
+        end
+end
+
+
+
+
+
+        --Jogador
+        local JogadorTab = Window:MakeTab({
+	Name = "Jogador",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+        local Section = JogadorTab:AddSection({
+	Name = "Auto-Farm"
+})
+        JogadorTab:AddToggle({
+	Name = "Get Wool",
+	Default = false,
+	Callback = function(Value)
+		_G.Wool = Value
+                Wool()
+	end    
+})
+
+end
