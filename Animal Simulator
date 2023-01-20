@@ -5,7 +5,7 @@ if game.PlaceId == 5712833750 then
         local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
         
         ---Main
-        local Window = OrionLib:MakeWindow({Name = "Troll Hub | Animal Simulator", HidePremium = false, SaveConfig = true, ConfigFolder = "Hubcfg", IntroEnabled = true, IntroText = "Troll Hub", IntroIcon = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRfoVE12LlALyIwcllfhb_nPZRUSLOZFJTrg&usqp=CAU"})
+        local Window = OrionLib:MakeWindow({Name = "Troll Hub | Animal Simulator", HidePremium = false, SaveConfig = true, ConfigFolder = "Hubcfg", IntroEnabled = true, IntroText = "Troll Hub", IntroIcon = "https://www.roblox.com/library/12216673750/Troll-Hub"})
         
         ---Valor
 _G.Coins = true
