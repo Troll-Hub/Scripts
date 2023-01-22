@@ -311,16 +311,16 @@ L.Ambient = Color3.fromRGB(59, 33, 27)
   	end    
 })
 
---Beta
-local BetaTab = Window:MakeTab({
+        --Beta
+        local BetaTab = Window:MakeTab({
 	Name = "Beta",
 	Icon = "rbxassetid://4483345998",
 	PremiumOnly = false
 })
-local Section = BetaTab:AddSection({
+        local Section = BetaTab:AddSection({
 	Name = "Beta functions"
 })
-BetaTab:AddToggle({
+        BetaTab:AddToggle({
 	Name = "Auto Lava Monster",
 	Default = false,
 	Callback = function(Value)
@@ -328,7 +328,7 @@ BetaTab:AddToggle({
 LavaMonster()
 	end    
 })
-BetaTab:AddToggle({
+        BetaTab:AddToggle({
 	Name = "Auto Griffin",
 	Default = false,
 	Callback = function(Value)
