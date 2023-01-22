@@ -19,18 +19,7 @@ function Coins()
         wait(1)
         end
 end
-function LavaMonster()
-        while _G.LavaMonster == true do
-        game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServer(workspace.NPC.LavaGorilla.Humanoid,22)
-        wait(0.1)
-        end
-end
-function Griffin()
-        while _G.Griffin == true do
-        game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServer(workspace.NPC.Griffin.Humanoid,1)
-        wait(0.1)
-        end
-end
+
         --Jogador
         local JogadorTab = Window:MakeTab({
 	Name = "Jogador",
