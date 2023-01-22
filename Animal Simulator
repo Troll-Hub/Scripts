@@ -9,6 +9,7 @@ if game.PlaceId == 5712833750 then
         
         ---Valor
 _G.Coins = true
+_G.LavaMonster = true
         
         ---function
 function Coins()
@@ -17,7 +18,12 @@ function Coins()
         wait(1)
         end
 end
-        
+function LavaMonster()
+        while _G.LavaMonster == true do
+        game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServer(workspace.NPC.LavaGorilla.Humanoid,22)
+        wait(0.1)
+        end
+end
         --Jogador
         local JogadorTab = Window:MakeTab({
 	Name = "Jogador",
@@ -35,6 +41,20 @@ end
 Coins()
 	end    
 })
+JogadorTab:AddToggle({
+	Name = "Auto Lava Monster",
+	Default = false,
+	Callback = function(Value)
+		_G.LavaMonster = Value
+LavaMonster()
+	end    
+})
+
+--[[
+Name = <string> - The name of the toggle.
+Default = <bool> - The default value of the toggle.
+Callback = <function> - The function of the toggle.
+]]
         
         --Others
         local OthersTab = Window:MakeTab({
@@ -292,11 +312,6 @@ L.Ambient = Color3.fromRGB(59, 33, 27)
       		loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
   	end    
 })
-
---[[
-Name = <string> - The name of the button.
-Callback = <function> - The function of the button.
-]]
         
         
 end
