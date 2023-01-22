@@ -10,6 +10,7 @@ if game.PlaceId == 5712833750 then
         ---Valor
 _G.Coins = true
 _G.LavaMonster = true
+_G.Griffin = true
         
         ---function
 function Coins()
@@ -21,6 +22,12 @@ end
 function LavaMonster()
         while _G.LavaMonster == true do
         game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServer(workspace.NPC.LavaGorilla.Humanoid,22)
+        wait(0.1)
+        end
+end
+function Griffin()
+        while _G.Griffin == true do
+        game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServer(workspace.NPC.Griffin.Humanoid,1)
         wait(0.1)
         end
 end
@@ -49,13 +56,15 @@ JogadorTab:AddToggle({
 LavaMonster()
 	end    
 })
-
---[[
-Name = <string> - The name of the toggle.
-Default = <bool> - The default value of the toggle.
-Callback = <function> - The function of the toggle.
-]]
-        
+JogadorTab:AddToggle({
+	Name = "Auto Griffin",
+	Default = false,
+	Callback = function(Value)
+	        _G.Griffin = Value
+Griffin()
+	end    
+})
+     
         --Others
         local OthersTab = Window:MakeTab({
 	Name = "Others",
@@ -311,6 +320,32 @@ L.Ambient = Color3.fromRGB(59, 33, 27)
 	Callback = function()
       		loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
   	end    
+})
+
+--Beta
+local BetaTab = Window:MakeTab({
+	Name = "Beta",
+	Icon = "rbxassetid://4483345998",
+	PremiumOnly = false
+})
+local Section = BetaTab:AddSection({
+	Name = "Beta functions"
+})
+BetaTab:AddToggle({
+	Name = "Auto Lava Monster",
+	Default = false,
+	Callback = function(Value)
+		_G.LavaMonster = Value
+LavaMonster()
+	end    
+})
+BetaTab:AddToggle({
+	Name = "Auto Griffin",
+	Default = false,
+	Callback = function(Value)
+	        _G.Griffin = Value
+Griffin()
+	end    
 })
         
         
