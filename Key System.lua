@@ -42,7 +42,7 @@ local Tab = Window:MakeTab({
 
 Tab:AddTextbox({
 	Name = "Enter Key System",
-	Default = "",
+	Default = "Password: troll-roblox",
 	TextDisappear = false,
 	Callback = function(Value)
 		_G.KeyInput = Value
