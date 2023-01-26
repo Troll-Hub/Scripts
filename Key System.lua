@@ -14,6 +14,7 @@ _G.KeyInput = "string"
 
 function MakeScriptHub()
         loadstring(game:HttpGet(('https://raw.githubusercontent.com/Troll-Hub/Scripts/main/Animal%20Simulator')))()
+end
 
 function CorrectKeyNotification()
         OrionLib:MakeNotification({
