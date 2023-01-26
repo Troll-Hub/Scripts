@@ -83,15 +83,16 @@ Coins()
       		loadstring(game:HttpGet('https://raw.githubusercontent.com/Troll-Hub/Scripts/main/RTX_SCRIPT_v3.txt'))()
   	end    
 })
-
---[[
-Name = <string> - The name of the button.
-Callback = <function> - The function of the button.
-]]
         OthersTab:AddButton({
 	Name = "Infinite Yield",
 	Callback = function()
       		loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+  	end    
+})
+        OthersTab:AddButton({
+	Name = "Destroy Hub",
+	Callback = function()
+      		OrionLib:Destroy()
   	end    
 })
 
