@@ -59,7 +59,7 @@ end
         --Jogador
         local JogadorTab = Window:MakeTab({
 	Name = "Jogador",
-	Icon = "rbxassetid://4483345998",
+	Icon = "rbxassetid://12473074641",
 	PremiumOnly = false
 })
 JogadorTab:AddToggle({
