@@ -62,14 +62,6 @@ end
 	Icon = "rbxassetid://12473074641",
 	PremiumOnly = false
 })
-JogadorTab:AddToggle({
-	Name = "5K dummies farm",
-	Default = false,
-	Callback = function(Value)
-		_G.Kdummies = Value
-				Dummies()
-	end    
-})
         local Section = JogadorTab:AddSection({
 	Name = "Auto-Farm"
 })
@@ -81,6 +73,15 @@ JogadorTab:AddToggle({
 Coins()
 	end    
 })
+	JogadorTab:AddToggle({
+	Name = "5K dummies farm",
+	Default = false,
+	Callback = function(Value)
+		_G.Kdummies = Value
+				Dummies()
+	end    
+})
+	
 
         --Others
         local OthersTab = Window:MakeTab({
