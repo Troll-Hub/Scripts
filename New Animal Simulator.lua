@@ -11,7 +11,7 @@ if game.PlaceId == 5712833750 then
 _G.Coins = true
 _G.LavaMonster = true
 _G.Griffin = true
-_G.5Kdummies = true
+_G.Kdummies = true
         
         ---function
 function Coins()
@@ -22,7 +22,7 @@ function Coins()
 end
 
 function Dummies()
-while _G.5Kdummies == true do
+while _G.Kdummies == true do
 local args = {
     [1] = workspace.MAP:FindFirstChild("5k_dummies").Dummy2.Humanoid,
     [2] = 5
@@ -66,7 +66,7 @@ JogadorTab:AddToggle({
 	Name = "5K dummies farm",
 	Default = false,
 	Callback = function(Value)
-		_G.5Kdummies = Value
+		_G.Kdummies = Value
 				Dummies()
 	end    
 })
