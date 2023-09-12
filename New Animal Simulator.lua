@@ -67,7 +67,7 @@ JogadorTab:AddToggle({
 	Default = false,
 	Callback = function(Value)
 		_G.5Kdummies = Value
-				5Kdummies()
+				Dummies()
 	end    
 })
         local Section = JogadorTab:AddSection({
