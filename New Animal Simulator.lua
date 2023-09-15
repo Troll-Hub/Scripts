@@ -1,7 +1,3 @@
-
-        
-        
-end
 -- Made by TROLL-ROBLOX
 if game.PlaceId == 5712833750 then
 
