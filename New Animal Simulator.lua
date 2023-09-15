@@ -139,18 +139,5 @@ if game.PlaceId == 5712833750 then
             Griffin()
         end
     })
-
-    BetaTab:AddButton({
-        Name = "Enable Fly",
-        Callback = function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/Troll-Hub/Scripts/main/Mobile_Fly.lua"))()
-        end
-    })
-
-    BetaTab:AddButton({
-        Name = "Disable Fly",
-        Callback = function()
-            loadstring(game:HttpGet("https://raw.githubusercontent.com/Troll-Hub/Scripts/main/Mobile_Fly_off.lua"))()
-        end
-    })
+    
 end
