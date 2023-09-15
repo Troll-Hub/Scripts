@@ -152,5 +152,13 @@ game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServ
             Griffin()
         end
     })
+            BetaTab:AddButton({
+	Name = "tp to dummies",
+	Callback = function()
+  
+local rootPart = game.Players.LocalPlayer.Character.HumanoidRootPart
+rootPart.CFrame = CFrame.new(-50, 591, 828)
+  	end
+})
     
 end
