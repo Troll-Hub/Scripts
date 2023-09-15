@@ -11,6 +11,7 @@ if game.PlaceId == 5712833750 then
     _G.Coins = true
     _G.LavaMonster = true
     _G.Griffin = true
+    _G.Dummies = true
 
     -- Functions
     function Coins()
@@ -41,6 +42,18 @@ if game.PlaceId == 5712833750 then
 
             game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServer(unpack(args))
             wait(0.001)
+        end
+    end
+
+    function Dummies()
+  while _G.Dummies == true do
+    local args = {
+    [1] = workspace.MAP:FindFirstChild("5k_dummies").Dummy2.Humanoid,
+    [2] = 5
+}
+
+game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServer(unpack(args))
+    wait(0.001)
         end
     end
 
