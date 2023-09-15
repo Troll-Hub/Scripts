@@ -142,7 +142,6 @@ if game.PlaceId == 5712833750 then
 
     BetaTab:AddButton({
         Name = "Enable Fly",
-        Default = false,
         Callback = function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/Troll-Hub/Scripts/main/Mobile_Fly.lua"))()
         end
@@ -150,7 +149,6 @@ if game.PlaceId == 5712833750 then
 
     BetaTab:AddButton({
         Name = "Disable Fly",
-        Default = false,
         Callback = function()
             loadstring(game:HttpGet("https://raw.githubusercontent.com/Troll-Hub/Scripts/main/Mobile_Fly_off.lua"))()
         end
