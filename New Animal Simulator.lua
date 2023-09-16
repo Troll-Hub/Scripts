@@ -76,6 +76,14 @@ game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServ
             Coins()
         end
     })
+	JogadorTab:AddToggle({
+	Name = "Auto 5K Dummies",
+	Default = false,
+	Callback = function(Value)
+		_G.Dummies = Value
+		Dummies()
+	end  
+})
 
     -- Others
     local OthersTab = Window:MakeTab({
