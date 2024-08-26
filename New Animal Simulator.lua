@@ -33,39 +33,23 @@ if game.PlaceId == 5712833750 then
 local function CoinTP()
         while _G.CoinTP do
           local player = game.Players.LocalPlayer
-local coinTemplate = workspace.CoinContainer.CoinTemplate -- Asegúrate de ajustar el camino correctamente
+local humanoidRootPart = player.Character:WaitForChild("HumanoidRootPart")
 
-local function findClosestObject()
-    local closestObject = nil
-    local closestDistance = math.huge
-
-    for _, object in pairs(coinTemplate:GetChildren()) do
-        if object:IsA("BasePart") then
-            local distance = (player.Character.HumanoidRootPart.Position - object.Position).Magnitude
-            if distance < closestDistance then
-                closestDistance = distance
-                closestObject = object
+local function teleportObjectsToPlayer()
+    for _, coinTemplate in pairs(workspace:GetChildren()) do
+        if coinTemplate.Name:match("CoinTemplate") then
+            for _, object in pairs(coinTemplate:GetChildren()) do
+                if object:IsA("BasePart") then
+                    object.CFrame = humanoidRootPart.CFrame
+                    wait(1) -- Ajusta el tiempo entre teletransportaciones según tus preferencias
+                end
             end
         end
     end
-
-    return closestObject
 end
 
-while true do
-    local closestCoinOrChest = findClosestObject()
+teleportObjectsToPlayer()
 
-    if closestCoinOrChest then
-        local humanoidRootPart = player.Character:WaitForChild("HumanoidRootPart")
-        humanoidRootPart.CFrame = closestCoinOrChest.CFrame
-    else
-        print("No se encontraron objetos Coin o Chest en el modelo CoinTemplate.")
-    end
-
-    wait(0.001) -- Ajusta la velocidad de teletransportación según tus preferencias
-end
-
-         wait(0.001)
          end
     end
 
@@ -136,7 +120,7 @@ end
     })
   
   JogadorTab:AddToggle({
-        Name = "Auto Coin Tp",
+        Name = "Auto Coin Tp(Must Crash)",
         Default = false,
         Callback = function(Value)
             _G.CoinTP = Value
