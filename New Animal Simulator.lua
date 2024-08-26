@@ -148,7 +148,7 @@ game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServ
     BetaTab:AddButton({
         Name = "Tp to Gorilla(BETA)",
         Callback = function()
-            local npc = workspace.NPC.LavaMonster
+            local npc = workspace.NPC.LavaGorilla
 local player = game.Players.LocalPlayer
 local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 if rootPart and npc then
