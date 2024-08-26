@@ -1,73 +1,121 @@
--- Made by TROLL-ROBLOX
+-- Hecho por TROLL-ROBLOX
 if game.PlaceId == 5712833750 then
+    -- Cargar OrionLib
+    local OrionLib = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Orion/main/source'))()
 
-    -- Load
-    local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/shlexware/Orion/main/source')))()
+    -- Crear ventana
+    local Window = OrionLib:MakeWindow({
+        Name = "Hub dos Cria | Animal Simulator",
+        HidePremium = false,
+        SaveConfig = true,
+        ConfigFolder = "Hubcfg",
+        IntroEnabled = true,
+        IntroText = "Troll Hub",
+        IntroIcon = "rbxassetid://13118324992",
+        Icon = "rbxassetid://13118324992"
+    })
 
-    -- Main
-    local Window = OrionLib:MakeWindow({ Name = "Troll Hub | Animal Simulator", HidePremium = false, SaveConfig = true, ConfigFolder = "Hubcfg", IntroEnabled = true, IntroText = "Troll Hub" })
-
-  -- Valor
+    -- Variables globales
     _G.Coins = true
     _G.LavaMonster = true
     _G.Griffin = true
     _G.Dummies = true
+    _G.CoinTP = true
 
-    -- Functions
-    function Coins()
-    while _G.Coins == true do
-        game:GetService("ReplicatedStorage").Events.CoinEvent:FireServer()
-        wait(0.00000000000000001)
+    -- Funciones
+    local function Coins()
+        while _G.Coins do
+            game:GetService("ReplicatedStorage").Events.CoinEvent:FireServer()
+            wait(0.001)
+        end
     end
+
+local function CoinTP()
+        while _G.CoinTP do
+          local player = game.Players.LocalPlayer
+local coinTemplate = workspace.CoinContainer.CoinTemplate -- Asegúrate de ajustar el camino correctamente
+
+local function findClosestObject()
+    local closestObject = nil
+    local closestDistance = math.huge
+
+    for _, object in pairs(coinTemplate:GetChildren()) do
+        if object:IsA("BasePart") then
+            local distance = (player.Character.HumanoidRootPart.Position - object.Position).Magnitude
+            if distance < closestDistance then
+                closestDistance = distance
+                closestObject = object
+            end
+        end
+    end
+
+    return closestObject
 end
 
+while true do
+    local closestCoinOrChest = findClosestObject()
 
-    function LavaMonster()
-        while _G.LavaMonster == true do
-            local args = {
-                [1] = workspace.NPC.LavaGorilla.Humanoid,
-                [2] = 1
-            }
+    if closestCoinOrChest then
+        local humanoidRootPart = player.Character:WaitForChild("HumanoidRootPart")
+        humanoidRootPart.CFrame = closestCoinOrChest.CFrame
+    else
+        print("No se encontraron objetos Coin o Chest en el modelo CoinTemplate.")
+    end
 
-            game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServer(unpack(args))
+    wait(0.001) -- Ajusta la velocidad de teletransportación según tus preferencias
+end
+
+         wait(0.001)
+         end
+    end
+
+    local function LavaMonster()
+        while _G.LavaMonster do
+            local npc = workspace:FindFirstChild("NPC") and workspace.NPC:FindFirstChild("LavaGorilla")
+            if npc and npc:FindFirstChild("Humanoid") then
+                local event = game:GetService("ReplicatedStorage"):FindFirstChild("jdskhfsIIIllliiIIIdchgdIiIIIlIlIli")
+                if event then
+                    event:FireServer(npc.Humanoid, 1)
+                end
+            end
             wait(0.001)
         end
     end
 
-    function Griffin()
-        while _G.Griffin == true do
-            local args = {
-                [1] = workspace.NPC.Griffin.Humanoid,
-                [2] = 1
-            }
-
-            game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServer(unpack(args))
+    local function Griffin()
+        while _G.Griffin do
+            local npc = workspace:FindFirstChild("NPC") and workspace.NPC:FindFirstChild("Griffin")
+            if npc and npc:FindFirstChild("Humanoid") then
+                local event = game:GetService("ReplicatedStorage"):FindFirstChild("jdskhfsIIIllliiIIIdchgdIiIIIlIlIli")
+                if event then
+                    event:FireServer(npc.Humanoid, 1)
+                end
+            end
             wait(0.001)
         end
     end
 
-    function Dummies()
-  while _G.Dummies == true do
-    local args = {
-    [1] = workspace.MAP:FindFirstChild("5k_dummies").Dummy2.Humanoid,
-    [2] = 5
-}
-
-game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServer(unpack(args))
-    wait(0.001)
+    local function Dummies()
+        while _G.Dummies do
+            local dummy = workspace.MAP and workspace.MAP:FindFirstChild("5k_dummies") and workspace.MAP["5k_dummies"]:FindFirstChild("Dummy2")
+            if dummy and dummy:FindFirstChild("Humanoid") then
+                local event = game:GetService("ReplicatedStorage"):FindFirstChild("jdskhfsIIIllliiIIIdchgdIiIIIlIlIli")
+                if event then
+                    event:FireServer(dummy.Humanoid, 5)
+                end
+            end
+            wait(0.001)
         end
     end
 
-    -- Jogador
+    -- Crear pestaña de Jugador
     local JogadorTab = Window:MakeTab({
         Name = "Jogador",
-        Icon = "rbxassetid://4483345998",
+        Icon = "rbxassetid://13118324992",
         PremiumOnly = false
     })
 
-    local Section = JogadorTab:AddSection({
-        Name = "Auto-Farm"
-    })
+    JogadorTab:AddSection({ Name = "Auto-Farm" })
 
     JogadorTab:AddToggle({
         Name = "Auto Level/Coins",
@@ -77,25 +125,33 @@ game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServ
             Coins()
         end
     })
-	JogadorTab:AddToggle({
-	Name = "Auto 5K Dummies",
-	Default = false,
-	Callback = function(Value)
-		_G.Dummies = Value
-		Dummies()
-	end  
-})
 
-    -- Others
+    JogadorTab:AddToggle({
+        Name = "Auto 5K Dummies",
+        Default = false,
+        Callback = function(Value)
+            _G.Dummies = Value
+            Dummies()
+        end
+    })
+  
+  JogadorTab:AddToggle({
+        Name = "Auto Coin Tp",
+        Default = false,
+        Callback = function(Value)
+            _G.CoinTP = Value
+            CoinTP()
+        end
+    })
+
+    -- Crear pestaña de Otros
     local OthersTab = Window:MakeTab({
-        Name = "Others",
+        Name = "Otros",
         Icon = "rbxassetid://4483345998",
         PremiumOnly = false
     })
 
-    local Section = OthersTab:AddSection({
-        Name = "Others"
-    })
+    OthersTab:AddSection({ Name = "Otros" })
 
     OthersTab:AddButton({
         Name = "RTX",
@@ -125,16 +181,14 @@ game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServ
         end
     })
 
-    -- Beta
+    -- Crear pestaña de Beta
     local BetaTab = Window:MakeTab({
         Name = "Beta",
         Icon = "rbxassetid://4483345998",
         PremiumOnly = false
     })
 
-    local Section = BetaTab:AddSection({
-        Name = "Beta functions"
-    })
+    BetaTab:AddSection({ Name = "Funciones Beta" })
 
     BetaTab:AddToggle({
         Name = "Auto Lava Monster",
@@ -146,15 +200,14 @@ game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServ
     })
 
     BetaTab:AddButton({
-        Name = "Tp to Gorilla(BETA)",
+        Name = "Tp to Lava Monster",
         Callback = function()
-            local npc = workspace.NPC.LavaGorilla.Humanoid
-local player = game.Players.LocalPlayer
-local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-if rootPart and npc then
-    rootPart.CFrame = npc.CFrame
-end
-
+            local Players = game:GetService("Players")
+            local LocalPlayer = Players.LocalPlayer
+            local NPC = workspace:FindFirstChild("NPC") and workspace.NPC:FindFirstChild("LavaGorilla")
+            if NPC and NPC:FindFirstChild("HumanoidRootPart") then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = NPC.HumanoidRootPart.CFrame
+            end
         end
     })
 
@@ -166,13 +219,27 @@ end
             Griffin()
         end
     })
-            BetaTab:AddButton({
-	Name = "tp to dummies",
-	Callback = function()
-  
-local rootPart = game.Players.LocalPlayer.Character.HumanoidRootPart
-rootPart.CFrame = CFrame.new(-50, 591, 828)
-  	end
-})
-    
+
+    BetaTab:AddButton({
+        Name = "Tp to Dummies",
+        Callback = function()
+            local rootPart = game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if rootPart then
+                rootPart.CFrame = CFrame.new(-50, 591, 828)
+            end
+        end
+    })
+
+    BetaTab:AddButton({
+        Name = "Tp to Griffin",
+        Callback = function()
+            local Players = game:GetService("Players")
+            local LocalPlayer = Players.LocalPlayer
+            local NPC = workspace:FindFirstChild("NPC") and workspace.NPC:FindFirstChild("Griffin")
+            if NPC and NPC:FindFirstChild("HumanoidRootPart") then
+                LocalPlayer.Character.HumanoidRootPart.CFrame = NPC.HumanoidRootPart.CFrame
+            end
+        end
+    })
+
 end
