@@ -7,7 +7,7 @@ if game.PlaceId == 5712833750 then
     -- Main
     local Window = OrionLib:MakeWindow({ Name = "Troll Hub | Animal Simulator", HidePremium = false, SaveConfig = true, ConfigFolder = "Hubcfg", IntroEnabled = true, IntroText = "Troll Hub" })
 
-    -- Valor
+  -- Valor
     _G.Coins = true
     _G.LavaMonster = true
     _G.Griffin = true
@@ -15,11 +15,12 @@ if game.PlaceId == 5712833750 then
 
     -- Functions
     function Coins()
-        while _G.Coins == true do
-            game:GetService("ReplicatedStorage").Events.CoinEvent:FireServer()
-            wait(0.00001)
-        end
+    while _G.Coins == true do
+        game:GetService("ReplicatedStorage").Events.CoinEvent:FireServer()
+        -- No hay tiempo de espera aquí
     end
+end
+
 
     function LavaMonster()
         while _G.LavaMonster == true do
@@ -145,10 +146,15 @@ game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServ
     })
 
     BetaTab:AddButton({
-        Name = "Tp to spawn Gorilla",
+        Name = "Tp to Gorilla(BETA)",
         Callback = function()
-            local rootPart = game.Players.LocalPlayer.Character.HumanoidRootPart
-            rootPart.CFrame = CFrame.new(148.361176, 669.264893, 1441.97571, -0.023542881, 0, -0.999722898, 0, 1, 0, 0.999722898, 0, -0.023542881)
+            local npc = workspace.NPC.LavaMonster
+local player = game.Players.LocalPlayer
+local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+if rootPart and npc then
+    rootPart.CFrame = npc.CFrame
+end
+
         end
     })
 
