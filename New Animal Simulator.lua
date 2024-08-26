@@ -17,7 +17,7 @@ if game.PlaceId == 5712833750 then
     function Coins()
     while _G.Coins == true do
         game:GetService("ReplicatedStorage").Events.CoinEvent:FireServer()
-        -- No hay tiempo de espera aquí
+        wait(0.00000000000000001)
     end
 end
 
@@ -148,7 +148,7 @@ game:GetService("ReplicatedStorage").jdskhfsIIIllliiIIIdchgdIiIIIlIlIli:FireServ
     BetaTab:AddButton({
         Name = "Tp to Gorilla(BETA)",
         Callback = function()
-            local npc = workspace.NPC.LavaGorilla
+            local npc = workspace.NPC.LavaGorilla.Humanoid
 local player = game.Players.LocalPlayer
 local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
 if rootPart and npc then
