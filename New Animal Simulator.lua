@@ -5,7 +5,7 @@ if game.PlaceId == 5712833750 then
 
     -- Crear ventana
     local Window = OrionLib:MakeWindow({
-        Name = "Hub dos Cria | Animal Simulator",
+        Name = "Troll Hub | Animal Simulator",
         HidePremium = false,
         SaveConfig = true,
         ConfigFolder = "Hubcfg",
