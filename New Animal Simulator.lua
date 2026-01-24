@@ -1,5 +1,4 @@
--- Hecho por TROLL-ROBLOX
-if game.PlaceId == 2023680558 then
+-- Hecho por TROLL-HUB
     -- Cargar OrionLib
     local OrionLib = loadstring(game:HttpGet(('https://raw.githubusercontent.com/jensonhirst/Orion/main/source')))()
     -- Crear ventana
@@ -224,5 +223,3 @@ teleportObjectsToPlayer()
             end
         end
     })
-
-end
